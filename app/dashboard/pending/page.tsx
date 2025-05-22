@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { SchoolSurvey } from "@/app/types/survey";
 import DetailModal from "@/app/components/DetailModal";
-// import ReviewModal from "@/app/components/ReviewModal";
+
+const PAGE_SIZE = 10;
 
 export default function PendingPage() {
   const [surveys, setSurveys] = useState<SchoolSurvey[]>([]);
@@ -16,31 +17,38 @@ export default function PendingPage() {
   );
   const [reviewComment, setReviewComment] = useState("");
 
-  useEffect(() => {
-    const fetchSurveys = async () => {
-      try {
-        const response = await fetch("/api/surveys?status=pending");
-        if (!response.ok) {
-          throw new Error(`获取数据失败: ${response.status}`);
-        }
-        const data = await response.json();
-        if (Array.isArray(data)) {
-          setSurveys(data);
-        } else {
-          console.error("Error: Received non-array data:", data);
-          setError("接收到的数据格式不正确");
-        }
-      } catch (err) {
-        const error = err as Error;
-        console.error("Error fetching surveys:", error);
-        setError(`获取数据失败，请稍后重试: ${error.message}`);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // 分页相关
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
+  const fetchSurveys = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `/api/surveys?status=pending&page=${page}&pageSize=${PAGE_SIZE}`
+      );
+      if (!response.ok) throw new Error(`获取数据失败: ${response.status}`);
+      const data = await response.json();
+
+      if (Array.isArray(data.data)) {
+        setSurveys(data.data);
+        setTotalCount(data.total ?? 0);
+      } else {
+        console.error("Error: Received non-array data:", data);
+        setError("接收到的数据格式不正确");
+      }
+    } catch (err) {
+      const error = err as Error;
+      setError(`获取数据失败，请稍后重试: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchSurveys();
-  }, []);
+  }, [page]);
 
   const handleReview = (survey: SchoolSurvey) => {
     setSelectedSurvey(survey);
@@ -53,19 +61,14 @@ export default function PendingPage() {
     try {
       const response = await fetch("/api/surveys", {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           surveyId: selectedSurvey.id,
           status: "approved",
           comment: reviewComment,
         }),
       });
-
-      if (!response.ok) {
-        throw new Error(`操作失败: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`操作失败: ${response.status}`);
 
       setSurveys((prev) =>
         prev.filter((survey) => survey.id !== selectedSurvey.id)
@@ -74,7 +77,6 @@ export default function PendingPage() {
       setReviewComment("");
     } catch (err) {
       const error = err as Error;
-      console.error("Error approving survey:", error);
       setError(`操作失败，请稍后重试: ${error.message}`);
     }
   };
@@ -85,19 +87,14 @@ export default function PendingPage() {
     try {
       const response = await fetch("/api/surveys", {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           surveyId: selectedSurvey.id,
           status: "rejected",
           comment: reviewComment,
         }),
       });
-
-      if (!response.ok) {
-        throw new Error(`操作失败: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`操作失败: ${response.status}`);
 
       setSurveys((prev) =>
         prev.filter((survey) => survey.id !== selectedSurvey.id)
@@ -106,7 +103,6 @@ export default function PendingPage() {
       setReviewComment("");
     } catch (err) {
       const error = err as Error;
-      console.error("Error rejecting survey:", error);
       setError(`操作失败，请稍后重试: ${error.message}`);
     }
   };
@@ -116,18 +112,22 @@ export default function PendingPage() {
     setShowDetailModal(true);
   };
 
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) setPage(newPage);
+  };
+
   if (loading) {
     return (
-      <div className="flex h-full items-center justify-center">
-        <div className="text-lg">加载中...</div>
+      <div className="flex h-full items-center justify-center text-lg">
+        加载中...
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex h-full items-center justify-center">
-        <div className="text-lg text-red-500">{error}</div>
+      <div className="flex h-full items-center justify-center text-lg text-red-500">
+        {error}
       </div>
     );
   }
@@ -145,7 +145,6 @@ export default function PendingPage() {
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                 学校名称
               </th>
-              {/* 省份, 城市, 区县, 年级, 上学时间, 放学时间, 每周学习时间, 每月放假天数, 24年自杀人数, 学生评论 */}
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                 省份
               </th>
@@ -251,6 +250,27 @@ export default function PendingPage() {
         </table>
       </div>
 
+      {/* 分页控制 */}
+      <div className="mt-6 flex items-center justify-center space-x-4">
+        <button
+          onClick={() => handlePageChange(page - 1)}
+          disabled={page === 1}
+          className="rounded bg-gray-200 px-3 py-1 text-sm disabled:opacity-50"
+        >
+          上一页
+        </button>
+        <span>
+          第 <strong>{page}</strong> 页 / 共 <strong>{totalPages}</strong> 页
+        </span>
+        <button
+          onClick={() => handlePageChange(page + 1)}
+          disabled={page === totalPages}
+          className="rounded bg-gray-200 px-3 py-1 text-sm disabled:opacity-50"
+        >
+          下一页
+        </button>
+      </div>
+
       {/* 审核模态框 */}
       {showReviewModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
@@ -295,22 +315,20 @@ export default function PendingPage() {
         </div>
       )}
 
-      {/* 详情模态框 */}
+      {/* <DetailModal
+        isOpen={showDetailModal}
+        onClose={() => setShowDetailModal(false)}
+        survey={selectedSurvey}
+      /> */}
+
       <DetailModal
         isOpen={showDetailModal}
         onClose={() => setShowDetailModal(false)}
         survey={selectedSurvey}
+        type="pending"
+        onReview={handleReview} // 自定义处理逻辑
       />
-
-      {/* You are rendering ReviewModal twice. Let's remove the import and this instance */}
-      {/* <ReviewModal
-        isOpen={showReviewModal}
-        onClose={() => setShowReviewModal(false)}
-        onApprove={handleApprove}
-        onReject={handleReject}
-        comment={reviewComment}
-        setComment={setReviewComment}
-      /> */}
+      
     </div>
   );
 }

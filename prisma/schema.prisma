@@ -18,20 +18,26 @@ model User {
 }
 
 model SchoolSurvey {
-  id               Int      @id @default(autoincrement())
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  province         String
-  city             String
-  district         String
-  schoolName       String
-  grade            String
-  schoolStartTime  String
-  schoolEndTime    String
-  weeklyStudyHours Int
-  monthlyHolidays  Int
-  suicideCases     Int
-  studentComments  String
-  status           String   @default("pending")
-  reviewComment    String?
+  id                 Int      @id @default(autoincrement())
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  province           String
+  city               String
+  district           String
+  schoolName         String
+  grade              String
+  schoolStartTime    String
+  schoolEndTime      String
+  weeklyStudyHours   Int
+  monthlyHolidays    Int
+  winterVacationDays Int? // 寒假放假天数
+  winterTuitionTotal Float? // 寒假补课收费总价
+  suicideCases       Int
+  studentComments    String
+  status             String   @default("pending")
+  reviewComment      String?
+  ip                 String?
+  userAgent          String?
+  safetyKeyword      String? // 安全词
+  approvedBy         String? // 存储审核人员的用户名或ID
 }

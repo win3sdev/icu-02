@@ -50,12 +50,16 @@ export const authOptions: AuthOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.role = user.role;
+      if (user) {
+        token.id = user.id; // ✅ 这行非常关键！
+        token.role = user.role;
+      }
       return token;
     },
     async session({ session, token }) {
-      if (session?.user && typeof token.role === "string") {
-        session.user.role = token.role;
+      if (session.user) {
+        if (token.id) session.user.id = token.id as string; // ✅ 加 token.id 判断
+        if (token.role) session.user.role = token.role as string;
       }
       return session;
     },

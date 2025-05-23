@@ -43,11 +43,10 @@ export default function DashboardPage() {
       const rejectedResponse = await fetch("/api/surveys?status=rejected");
       if (!rejectedResponse.ok) throw new Error("获取已拒绝数据失败");
       const rejectedData = await rejectedResponse.json();
-
       setStats({
-        pendingCount: pendingData.length,
-        approvedCount: approvedData.length,
-        rejectedCount: rejectedData.length,
+        pendingCount: pendingData.data.length,
+        approvedCount: approvedData.data.length,
+        rejectedCount: rejectedData.data.length,
       });
     } catch (error) {
       console.error("Error fetching stats:", error);

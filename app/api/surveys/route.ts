@@ -77,10 +77,6 @@
 //   }
 // }
 
-
-
-
-
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
@@ -123,6 +119,7 @@ export async function GET(request: Request) {
           reviewComment: true,
           updatedAt: true,
           status: true,
+          approvedBy: true
         },
       }),
       prisma.schoolSurvey.count({ where }),
@@ -141,18 +138,19 @@ export async function GET(request: Request) {
 export async function PATCH(request: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session) {
+    if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await request.json();
     const { surveyId, status, comment } = body;
-
+    console.log(session.user.email);
     const updatedSurvey = await prisma.schoolSurvey.update({
       where: { id: surveyId },
       data: {
         status,
         reviewComment: comment,
+        approvedBy: session.user.email, // ✅ 添加审核人ID
         updatedAt: new Date(),
       },
     });

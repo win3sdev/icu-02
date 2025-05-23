@@ -112,7 +112,7 @@ const DetailModal: React.FC<DetailModalProps> = ({
                 </div>
                 <div>
                   <span className="font-medium">审核人：</span>
-                  {survey?.reviewer}
+                  {survey?.approvedBy}
                 </div>
                 <div>
                   <span className="font-medium">审核时间：</span>

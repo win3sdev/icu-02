@@ -112,8 +112,10 @@ export default function RejectedPage() {
                 "每月放假天数",
                 "24年自杀人数",
                 "学生评论",
+                "安全词",
                 "拒绝原因",
                 "审核时间",
+                "审核人",
                 "操作",
               ].map((title) => (
                 <th
@@ -169,11 +171,17 @@ export default function RejectedPage() {
                   <td className="whitespace-nowrap px-6 py-4 max-w-[200px] overflow-hidden text-ellipsis">
                     {survey.studentComments}
                   </td>
+                  <td className="whitespace-nowrap px-6 py-4 max-w-[200px] overflow-hidden text-ellipsis">
+                    {survey.safetyKeyword}
+                  </td>
                   <td className="whitespace-nowrap px-6 py-4">
                     {survey.reviewComment}
                   </td>
                   <td className="whitespace-nowrap px-6 py-4">
                     {new Date(survey.updatedAt).toLocaleString()}
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-4">
+                    {survey.approvedBy}
                   </td>
                   <td className="whitespace-nowrap px-6 py-4">
                     <div className="flex space-x-2">

@@ -17,6 +17,9 @@ export interface SchoolSurvey {
   studentComments: string;
   status: SurveyStatus;
   reviewComment: string | null;
+  safetyKeyword: string | null;
+  approvedBy: string | null;
+
 }
 
 export interface ReviewAction {

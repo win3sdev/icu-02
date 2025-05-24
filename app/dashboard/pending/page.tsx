@@ -176,6 +176,9 @@ export default function PendingPage() {
                 学生评论
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                安全词
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                 操作
               </th>
             </tr>
@@ -226,6 +229,9 @@ export default function PendingPage() {
                   </td>
                   <td className="whitespace-nowrap px-6 py-4 max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis">
                     {survey.studentComments}
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-4 max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis">
+                    {survey.safetyKeyword}
                   </td>
                   <td className="whitespace-nowrap px-6 py-4">
                     <div className="flex space-x-2">
@@ -328,7 +334,6 @@ export default function PendingPage() {
         type="pending"
         onReview={handleReview} // 自定义处理逻辑
       />
-      
     </div>
   );
 }

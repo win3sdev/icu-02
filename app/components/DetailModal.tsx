@@ -1,6 +1,5 @@
 import React from "react";
 
-
 interface DetailModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -114,10 +113,10 @@ const DetailModal: React.FC<DetailModalProps> = ({
                   <span className="font-medium">审核人：</span>
                   {survey?.approvedBy}
                 </div>
-                <div>
+                {/* <div>
                   <span className="font-medium">审核时间：</span>
                   {survey?.reviewTime}
-                </div>
+                </div> */}
                 <div>
                   <span className="font-medium">审核意见：</span>
                   {survey?.reviewComment}

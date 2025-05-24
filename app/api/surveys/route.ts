@@ -119,7 +119,8 @@ export async function GET(request: Request) {
           reviewComment: true,
           updatedAt: true,
           status: true,
-          approvedBy: true
+          approvedBy: true,
+          safetyKeyword: true
         },
       }),
       prisma.schoolSurvey.count({ where }),
@@ -138,7 +139,7 @@ export async function GET(request: Request) {
 export async function PATCH(request: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    if (!session?.user?.email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

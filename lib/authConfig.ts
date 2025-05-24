@@ -58,7 +58,7 @@ export const authOptions: AuthOptions = {
     },
     async session({ session, token }) {
       if (session.user) {
-        if (token.id) session.user.id = token.id as string; // ✅ 加 token.id 判断
+        // if (token.id) session.user.id = token.id as string; // ✅ 加 token.id 判断
         if (token.role) session.user.role = token.role as string;
       }
       return session;

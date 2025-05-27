@@ -3,10 +3,13 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
+import { Inbox, CheckCircle2, XCircle, Users } from "lucide-react";
 
 interface MenuItem {
   name: string;
+  label: string;
   href: string;
+  icon: React.ReactNode;
   adminOnly?: boolean;
 }
 
@@ -32,14 +35,37 @@ export default function Sidebar() {
     {
       title: "内容审核",
       items: [
-        { name: "待审核", href: "/dashboard/pending" },
-        { name: "审核通过", href: "/dashboard/approved" },
-        { name: "审核拒绝", href: "/dashboard/rejected" },
+        {
+          name: "pending",
+          label: "待处理",
+          href: "/dashboard/pending",
+          icon: <Inbox className="h-4 w-4" />,
+        },
+        {
+          name: "approved",
+          label: "已通过",
+          href: "/dashboard/approved",
+          icon: <CheckCircle2 className="h-4 w-4" />,
+        },
+        {
+          name: "rejected",
+          label: "已拒绝",
+          href: "/dashboard/rejected",
+          icon: <XCircle className="h-4 w-4" />,
+        },
       ],
     },
     {
       title: "设置管理",
-      items: [{ name: "用户管理", href: "/dashboard/users", adminOnly: true }],
+      items: [
+        {
+          name: "users",
+          label: "用户管理",
+          href: "/dashboard/users",
+          icon: <Users className="h-4 w-4" />,
+          adminOnly: true,
+        },
+      ],
     },
   ];
 
@@ -50,33 +76,27 @@ export default function Sidebar() {
     }));
   };
 
-  // 使用相同的样式类，但根据 mounted 状态调整透明度
-  const sidebarClasses =
-    "flex h-full w-64 flex-col bg-gray-800 text-white shadow-lg";
-  const headerClasses =
-    "flex h-20 items-center justify-center border-b border-gray-700 bg-gray-900 px-4 cursor-pointer transition-all duration-300 hover:bg-gray-800";
-  const userInfoClasses =
-    "flex items-center space-x-3 border-b border-gray-700 p-4";
-  const menuItemClasses = (isActive: boolean) =>
-    `block rounded-lg px-4 py-2 text-sm transition-all duration-200 ${
-      isActive ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-gray-700"
-    }`;
-
   return (
-    <div className={sidebarClasses} style={{ opacity: mounted ? 1 : 0 }}>
-      {/* 网站名称 */}
-      <div className={headerClasses} onClick={() => router.push("/dashboard")}>
-        <h1 className="text-xl font-bold">人工审核系统</h1>
+    <div
+      className="flex h-full w-64 flex-col bg-gray-900 text-white shadow-xl transition-opacity duration-300"
+      style={{ opacity: mounted ? 1 : 0 }}
+    >
+      {/* 站点名称区域 */}
+      <div
+        className="flex h-16 items-center justify-center border-b border-gray-800 bg-gray-950 px-4 cursor-pointer hover:bg-gray-900"
+        onClick={() => router.push("/dashboard")}
+      >
+        <h1 className="text-lg font-bold tracking-wide">人工审核系统</h1>
       </div>
 
       {/* 用户信息 */}
-      <div className={userInfoClasses}>
+      <div className="flex items-center space-x-3 border-b border-gray-800 p-4">
         <div className="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center">
-          <span className="text-white font-semibold">
+          <span className="text-white font-semibold text-lg">
             {session?.user?.name?.[0] || "U"}
           </span>
         </div>
-        <div>
+        <div className="leading-tight">
           <p className="text-sm font-medium">{session?.user?.name}</p>
           <p className="text-xs text-gray-400">
             {session?.user?.role === "admin" ? "管理员" : "审核员"}
@@ -84,17 +104,17 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* 菜单项 */}
-      <div className="flex-1 overflow-y-auto p-4">
+      {/* 菜单区域 */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-700">
         {menuItems.map((section) => (
-          <div key={section.title} className="mb-4">
+          <div key={section.title}>
             <button
-              className="flex w-full items-center justify-between rounded-lg px-4 py-3 text-left text-sm font-medium text-gray-300 transition-all duration-200 hover:bg-gray-700"
               onClick={() => toggleSection(section.title)}
+              className="flex w-full items-center justify-between px-4 py-2 text-left text-sm font-semibold text-gray-300 hover:bg-gray-800 rounded-lg transition-all duration-200"
             >
               <span>{section.title}</span>
               <svg
-                className={`h-5 w-5 transform transition-transform duration-200 ${
+                className={`h-4 w-4 transform transition-transform duration-300 ${
                   collapsedSections[section.title] ? "rotate-180" : ""
                 }`}
                 fill="none"
@@ -110,18 +130,23 @@ export default function Sidebar() {
               </svg>
             </button>
             {!collapsedSections[section.title] && (
-              <div className="mt-2 space-y-1">
+              <div className="mt-2 ml-2 space-y-1">
                 {section.items.map((item) => {
-                  if (item.adminOnly && session?.user?.role !== "admin") {
+                  if (item.adminOnly && session?.user?.role !== "admin")
                     return null;
-                  }
+                  const isActive = pathname === item.href;
                   return (
                     <a
                       key={item.name}
                       href={item.href}
-                      className={menuItemClasses(pathname === item.href)}
+                      className={`flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 ${
+                        isActive
+                          ? "bg-gray-700 text-white"
+                          : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                      }`}
                     >
-                      {item.name}
+                      {item.icon}
+                      {item.label}
                     </a>
                   );
                 })}

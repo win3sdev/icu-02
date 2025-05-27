@@ -134,116 +134,109 @@ export default function PendingPage() {
 
   return (
     <div className="rounded-lg bg-white p-6 shadow">
-      <h1 className="mb-6 text-2xl font-bold">待审核列表</h1>
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <h1 className="mb-6 text-2xl font-bold text-gray-800">待审核列表</h1>
+
+      <div className="overflow-x-auto rounded-lg border border-gray-200">
+        <table className="min-w-full divide-y divide-gray-200 text-sm text-gray-700">
+          <thead className="bg-gray-100 text-gray-600">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                提交时间
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                学校名称
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                省份
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                城市
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                区县
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                年级
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                上学时间
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                放学时间
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                每周学习时间
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                每月放假天数
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                24年自杀人数
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                学生评论
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                安全词
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                操作
-              </th>
+              {[
+                "提交时间",
+                "学校名称",
+                "省份",
+                "城市",
+                "区县",
+                "年级",
+                "上学时间",
+                "放学时间",
+                "每周学习时间",
+                "每月放假天数",
+                "24年自杀人数",
+                "学生评论",
+                "安全词",
+                "操作",
+              ].map((title) => (
+                <th
+                  key={title}
+                  className="px-4 py-3 text-left font-semibold tracking-wide"
+                >
+                  {title}
+                </th>
+              ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200 bg-white">
+          <tbody className="bg-white divide-y divide-gray-100">
             {surveys.length === 0 ? (
               <tr>
                 <td
-                  colSpan={13}
-                  className="px-6 py-4 text-center text-gray-500"
+                  colSpan={14}
+                  className="px-6 py-8 text-center text-gray-500"
                 >
-                  暂无数据
+                  暂无待审核数据
                 </td>
               </tr>
             ) : (
               surveys.map((survey) => (
-                <tr key={survey.id}>
-                  <td className="whitespace-nowrap px-6 py-4">
-                    {survey?.updatedAt?.toLocaleString()}
+                <tr
+                  key={survey.id}
+                  className="transition-colors duration-200 hover:bg-gray-100"
+                >
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    {/* {survey?.updatedAt?.toLocaleString()} */}
+                    {new Date(survey?.updatedAt).toLocaleString("zh-CN", {
+                      timeZone: "Asia/Shanghai",
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {survey.schoolName}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {survey.province}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">{survey.city}</td>
-                  <td className="whitespace-nowrap px-6 py-4">
+                  <td className="px-4 py-3 whitespace-nowrap">{survey.city}</td>
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {survey.district}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {survey.grade}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {survey.schoolStartTime}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {survey.schoolEndTime}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {survey.weeklyStudyHours}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {survey.monthlyHolidays}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {survey.suicideCases}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4 max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis">
+                  <td className="px-4 py-3 max-w-[200px] truncate">
                     {survey.studentComments}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4 max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis">
+                  <td className="px-4 py-3 max-w-[200px] truncate">
                     {survey.safetyKeyword}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">
-                    <div className="flex space-x-2">
+                  <td className="px-4 py-3">
+                    <div className="flex flex-wrap gap-2">
                       <button
                         onClick={() => handleViewDetail(survey)}
-                        className="rounded-md bg-gray-500 px-3 py-1 text-sm text-white hover:bg-gray-600"
+                        className="rounded-md bg-gray-500 px-3 py-1 text-white text-sm hover:bg-gray-600 transition-colors"
                       >
                         查看详情
                       </button>
                       <button
                         onClick={() => handleReview(survey)}
-                        className="rounded-md bg-blue-500 px-3 py-1 text-sm text-white hover:bg-blue-600"
+                        className="rounded-md bg-blue-500 px-3 py-1 text-white text-sm hover:bg-blue-600 transition-colors"
                       >
                         审核
                       </button>
@@ -256,22 +249,22 @@ export default function PendingPage() {
         </table>
       </div>
 
-      {/* 分页控制 */}
-      <div className="mt-6 flex items-center justify-center space-x-4">
+      {/* 分页 */}
+      <div className="mt-6 flex items-center justify-center gap-4 text-sm">
         <button
           onClick={() => handlePageChange(page - 1)}
           disabled={page === 1}
-          className="rounded bg-gray-200 px-3 py-1 text-sm disabled:opacity-50"
+          className="rounded bg-gray-200 px-3 py-1 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           上一页
         </button>
-        <span>
+        <span className="text-gray-600">
           第 <strong>{page}</strong> 页 / 共 <strong>{totalPages}</strong> 页
         </span>
         <button
           onClick={() => handlePageChange(page + 1)}
           disabled={page === totalPages}
-          className="rounded bg-gray-200 px-3 py-1 text-sm disabled:opacity-50"
+          className="rounded bg-gray-200 px-3 py-1 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           下一页
         </button>
@@ -279,22 +272,20 @@ export default function PendingPage() {
 
       {/* 审核模态框 */}
       {showReviewModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-          <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-            <h2 className="mb-4 text-xl font-bold">审核操作</h2>
-            <div className="mb-4">
-              <label className="mb-2 block text-sm font-medium text-gray-700">
-                审核备注
-              </label>
-              <textarea
-                value={reviewComment}
-                onChange={(e) => setReviewComment(e.target.value)}
-                className="w-full rounded-md border border-gray-300 p-2"
-                rows={4}
-                placeholder="请输入审核备注（可选）"
-              />
-            </div>
-            <div className="flex justify-end space-x-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl animate-fade-in">
+            <h2 className="mb-4 text-xl font-bold text-gray-800">审核操作</h2>
+            <label className="mb-2 block text-sm font-medium text-gray-700">
+              审核备注
+            </label>
+            <textarea
+              value={reviewComment}
+              onChange={(e) => setReviewComment(e.target.value)}
+              className="w-full rounded-md border border-gray-300 p-2 text-sm focus:ring focus:ring-blue-200"
+              rows={4}
+              placeholder="请输入审核备注（可选）"
+            />
+            <div className="mt-4 flex justify-end gap-3">
               <button
                 onClick={() => {
                   setShowReviewModal(false);
@@ -321,18 +312,13 @@ export default function PendingPage() {
         </div>
       )}
 
-      {/* <DetailModal
-        isOpen={showDetailModal}
-        onClose={() => setShowDetailModal(false)}
-        survey={selectedSurvey}
-      /> */}
-
+      {/* 详情模态框 */}
       <DetailModal
         isOpen={showDetailModal}
         onClose={() => setShowDetailModal(false)}
         survey={selectedSurvey}
         type="pending"
-        onReview={handleReview} // 自定义处理逻辑
+        onReview={handleReview}
       />
     </div>
   );

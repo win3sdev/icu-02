@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-
+import { Clock, CheckCircle, XCircle } from "lucide-react";
+import { Inbox, CheckCircle2 } from "lucide-react";
 interface DashboardStats {
   pendingCount: number;
   approvedCount: number;
@@ -30,17 +31,17 @@ export default function DashboardPage() {
   const fetchStats = async () => {
     try {
       // 获取待审核数量
-      const pendingResponse = await fetch("/api/surveys?status=pending");
+      const pendingResponse = await fetch("/api/dashboard/status?status=pending");
       if (!pendingResponse.ok) throw new Error("获取待审核数据失败");
       const pendingData = await pendingResponse.json();
 
       // 获取已通过数量
-      const approvedResponse = await fetch("/api/surveys?status=approved");
+      const approvedResponse = await fetch("/api/dashboard/status?status=approved");
       if (!approvedResponse.ok) throw new Error("获取已通过数据失败");
       const approvedData = await approvedResponse.json();
 
       // 获取已拒绝数量
-      const rejectedResponse = await fetch("/api/surveys?status=rejected");
+      const rejectedResponse = await fetch("/api/dashboard/status?status=rejected");
       if (!rejectedResponse.ok) throw new Error("获取已拒绝数据失败");
       const rejectedData = await rejectedResponse.json();
       setStats({
@@ -104,28 +105,20 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        {/* 待处理 */}
         <div className="transform rounded-xl bg-white p-6 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold text-blue-800">待审核</h2>
+              <h2 className="flex items-center gap-2 text-lg font-semibold text-blue-800">
+                <Inbox className="h-5 w-5" />
+                待处理
+              </h2>
               <p className="mt-2 text-3xl font-bold text-blue-600">
                 {stats.pendingCount}
               </p>
             </div>
             <div className="rounded-full bg-blue-100 p-3">
-              <svg
-                className="h-6 w-6 text-blue-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
+              <Inbox className="h-6 w-6 text-blue-600" />
             </div>
           </div>
           <button
@@ -136,28 +129,20 @@ export default function DashboardPage() {
           </button>
         </div>
 
+        {/* 已通过 */}
         <div className="transform rounded-xl bg-white p-6 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold text-green-800">审核通过</h2>
+              <h2 className="flex items-center gap-2 text-lg font-semibold text-green-800">
+                <CheckCircle2 className="h-5 w-5" />
+                已通过
+              </h2>
               <p className="mt-2 text-3xl font-bold text-green-600">
                 {stats.approvedCount}
               </p>
             </div>
             <div className="rounded-full bg-green-100 p-3">
-              <svg
-                className="h-6 w-6 text-green-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
+              <CheckCircle2 className="h-6 w-6 text-green-600" />
             </div>
           </div>
           <button
@@ -168,28 +153,20 @@ export default function DashboardPage() {
           </button>
         </div>
 
+        {/* 已拒绝 */}
         <div className="transform rounded-xl bg-white p-6 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold text-red-800">审核拒绝</h2>
+              <h2 className="flex items-center gap-2 text-lg font-semibold text-red-800">
+                <XCircle className="h-5 w-5" />
+                已拒绝
+              </h2>
               <p className="mt-2 text-3xl font-bold text-red-600">
                 {stats.rejectedCount}
               </p>
             </div>
             <div className="rounded-full bg-red-100 p-3">
-              <svg
-                className="h-6 w-6 text-red-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <XCircle className="h-6 w-6 text-red-600" />
             </div>
           </div>
           <button

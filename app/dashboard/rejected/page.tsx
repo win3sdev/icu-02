@@ -95,10 +95,13 @@ export default function RejectedPage() {
 
   return (
     <div className="rounded-lg bg-white p-6 shadow">
-      <h1 className="mb-6 text-2xl font-bold">审核拒绝列表</h1>
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <h1 className="mb-6 text-2xl font-bold text-gray-800">
+        审核拒绝列表
+      </h1>
+
+      <div className="overflow-x-auto rounded-lg border border-gray-200">
+        <table className="min-w-full divide-y divide-gray-200 text-sm text-gray-700">
+          <thead className="bg-gray-100 text-gray-600">
             <tr>
               {[
                 "学校名称",
@@ -120,80 +123,105 @@ export default function RejectedPage() {
               ].map((title) => (
                 <th
                   key={title}
-                  className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                  className="px-4 py-3 text-left font-semibold tracking-wide"
                 >
                   {title}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200 bg-white">
+
+          <tbody className="bg-white divide-y divide-gray-100">
             {surveys.length === 0 ? (
               <tr>
                 <td
                   colSpan={14}
-                  className="px-6 py-4 text-center text-gray-500"
+                  className="px-6 py-8 text-center text-gray-500"
                 >
                   暂无数据
                 </td>
               </tr>
             ) : (
               surveys.map((survey) => (
-                <tr key={survey.id}>
-                  <td className="whitespace-nowrap px-6 py-4">
+                <tr
+                  key={survey.id}
+                  className="transition-colors duration-200 hover:bg-gray-100"
+                >
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {survey.schoolName}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {survey.province}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">{survey.city}</td>
-                  <td className="whitespace-nowrap px-6 py-4">
+                  <td className="px-4 py-3 whitespace-nowrap">{survey.city}</td>
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {survey.district}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {survey.grade}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {survey.schoolStartTime}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {survey.schoolEndTime}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {survey.weeklyStudyHours}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {survey.monthlyHolidays}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {survey.suicideCases}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4 max-w-[200px] overflow-hidden text-ellipsis">
+
+                  <td
+                    className="px-4 py-3 max-w-[200px] truncate"
+                    title={survey.studentComments}
+                  >
                     {survey.studentComments}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4 max-w-[200px] overflow-hidden text-ellipsis">
+
+                  <td
+                    className="px-4 py-3 max-w-[200px] truncate"
+                    // title={survey.safetyKeyword}
+                  >
                     {survey.safetyKeyword}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">
+
+                  <td
+                    className="max-w-[180px] px-5 py-3 whitespace-nowrap overflow-hidden text-ellipsis"
+                    // title={survey.reviewComment}
+                  >
                     {survey.reviewComment}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">
-                    {new Date(survey.updatedAt).toLocaleString()}
+
+                  <td className="whitespace-nowrap px-5 py-3">
+                    {/* {new Date(survey.updatedAt).toLocaleString()} */}
+                    {new Date(survey.updatedAt).toLocaleString("zh-CN", {
+                      timeZone: "Asia/Shanghai",
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">
+                  <td className="whitespace-nowrap px-5 py-3">
                     {survey.approvedBy}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4">
-                    <div className="flex space-x-2">
+                  <td className="whitespace-nowrap px-5 py-3">
+                    <div className="flex gap-3">
                       <button
                         onClick={() => handleViewDetail(survey)}
-                        className="rounded-md bg-gray-500 px-3 py-1 text-sm text-white hover:bg-gray-600"
+                        className="rounded-md bg-gray-500 px-3 py-1 text-white text-sm hover:bg-gray-600 transition-colors"
                       >
                         查看详情
                       </button>
                       <button
                         onClick={() => handleReview(survey.id)}
-                        className="rounded-md bg-blue-500 px-3 py-1 text-sm text-white hover:bg-blue-600"
+                        className="rounded-md bg-blue-500 px-3 py-1 text-white text-sm hover:bg-blue-600 transition-colors"
                       >
                         重新审核
                       </button>
@@ -206,25 +234,23 @@ export default function RejectedPage() {
         </table>
       </div>
 
-      {/* 分页控件 */}
-      <div className="mt-6 flex items-center justify-center space-x-4">
+      {/* 分页 */}
+      <div className="mt-6 flex items-center justify-center gap-4 text-sm">
         <button
           disabled={page === 1}
           onClick={() => setPage((p) => Math.max(p - 1, 1))}
-          className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm hover:bg-gray-100 disabled:opacity-50"
+          className="rounded bg-gray-200 px-3 py-1 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           上一页
         </button>
-
-        <span>
+        <span className="text-gray-600">
           第 <strong>{page}</strong> 页 / 共{" "}
           <strong>{Math.ceil(totalCount / pageSize)}</strong> 页
         </span>
-
         <button
           disabled={page >= Math.ceil(totalCount / pageSize)}
           onClick={() => setPage((p) => p + 1)}
-          className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm hover:bg-gray-100 disabled:opacity-50"
+          className="rounded bg-gray-200 px-3 py-1 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           下一页
         </button>

@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import React from "react";
 
 interface ReviewModalProps {
@@ -19,10 +20,10 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-[160]">
+  return createPortal(
+    <div className="fixed inset-0 flex items-center justify-center bg-black/30 z-[160]">
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
-        <div className="flex justify-between items-center mb-4 z-[160]">
+        <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">审核操作</h2>
           <button
             onClick={onClose}
@@ -78,8 +79,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
-
-export default ReviewModal;

@@ -89,157 +89,133 @@ export default function ApprovedPage() {
         <div className="text-center text-lg text-red-500">{error}</div>
       ) : (
         <>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              {/* 表头省略，保留你原来的 <thead> */}
-              <thead className="bg-gray-50">
+          <div className="overflow-x-auto rounded-lg border border-gray-200">
+            <table className="min-w-full divide-y divide-gray-200 text-sm text-gray-700">
+              <thead className="bg-gray-100 text-gray-600">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <th className="px-4 py-3 text-left font-semibold tracking-wide">
                     学校名称
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <th className="px-4 py-3 text-left font-semibold tracking-wide">
                     省份
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <th className="px-4 py-3 text-left font-semibold tracking-wide">
                     城市
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <th className="px-4 py-3 text-left font-semibold tracking-wide">
                     区县
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <th className="px-4 py-3 text-left font-semibold tracking-wide">
                     年级
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <th className="px-4 py-3 text-left font-semibold tracking-wide">
                     上学时间
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <th className="px-4 py-3 text-left font-semibold tracking-wide">
                     放学时间
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <th className="px-4 py-3 text-left font-semibold tracking-wide">
                     每周学习时间
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <th className="px-4 py-3 text-left font-semibold tracking-wide">
                     每月放假天数
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <th className="px-4 py-3 text-left font-semibold tracking-wide">
                     24年自杀人数
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <th className="px-4 py-3 text-left font-semibold tracking-wide">
                     学生评论
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <th className="px-4 py-3 text-left font-semibold tracking-wide">
                     安全词
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <th className="px-4 py-3 text-left font-semibold tracking-wide">
                     通过原因
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <th className="px-4 py-3 text-left font-semibold tracking-wide">
                     审核时间
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <th className="px-4 py-3 text-left font-semibold tracking-wide">
                     审核人
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <th className="px-4 py-3 text-left font-semibold tracking-wide">
                     操作
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
-                {surveys.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan={14}
-                      className="px-6 py-4 text-center text-gray-500"
-                    >
-                      暂无数据
+              <tbody className="bg-white divide-y divide-gray-100">
+                {surveys.map((survey) => (
+                  <tr
+                    key={survey.id}
+                    className="transition-colors duration-200 hover:bg-gray-100"
+                  >
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      {survey.schoolName}
+                    </td>
+                    <td className="px-4 py-3">{survey.province}</td>
+                    <td className="px-4 py-3">{survey.city}</td>
+                    <td className="px-4 py-3">{survey.district}</td>
+                    <td className="px-4 py-3">{survey.grade}</td>
+                    <td className="px-4 py-3">{survey.schoolStartTime}</td>
+                    <td className="px-4 py-3">{survey.schoolEndTime}</td>
+                    <td className="px-4 py-3">{survey.weeklyStudyHours}</td>
+                    <td className="px-4 py-3">{survey.monthlyHolidays}</td>
+                    <td className="px-4 py-3">{survey.suicideCases}</td>
+                    <td className="px-4 py-3 max-w-[200px] truncate">
+                      {survey.studentComments}
+                    </td>
+                    <td className="px-4 py-3 max-w-[200px] truncate">
+                      {survey.safetyKeyword}
+                    </td>
+                    <td className="px-4 py-3">{survey.reviewComment}</td>
+                    <td className="px-4 py-3">
+                      {/* {format(
+                        new Date(survey.updatedAt),
+                        "yyyy-MM-dd HH:mm:ss"
+                      )} */}
+                      {new Date(survey.updatedAt).toLocaleString("zh-CN", {
+                        timeZone: "Asia/Shanghai",
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </td>
+                    <td className="px-4 py-3">{survey.approvedBy}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => handleViewDetail(survey)}
+                          className="rounded-md bg-gray-500 px-3 py-1 text-white hover:bg-gray-600 transition-colors"
+                        >
+                          查看详情
+                        </button>
+                        <button
+                          onClick={() => handleReview(survey)}
+                          className="rounded-md bg-blue-500 px-3 py-1 text-white hover:bg-blue-600 transition-colors"
+                        >
+                          重新审核
+                        </button>
+                      </div>
                     </td>
                   </tr>
-                ) : (
-                  surveys.map((survey) => (
-                    <tr key={survey.id}>
-                      <td className="whitespace-nowrap px-6 py-4">
-                        {survey.schoolName}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4">
-                        {survey.province}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4">
-                        {survey.city}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4">
-                        {survey.district}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4">
-                        {survey.grade}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4">
-                        {survey.schoolStartTime}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4">
-                        {survey.schoolEndTime}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4">
-                        {survey.weeklyStudyHours}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4">
-                        {survey.monthlyHolidays}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4">
-                        {survey.suicideCases}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis">
-                        {survey.studentComments}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis">
-                        {survey.safetyKeyword}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4">
-                        {survey.reviewComment}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4">
-                        {/* {new Date(survey.updatedAt).toLocaleString()} */}
-                        {format(
-                          new Date(survey.updatedAt),
-                          "yyyy-MM-dd HH:mm:ss"
-                        )}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4">
-                        {survey.approvedBy}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4">
-                        <div className="flex space-x-2">
-                          <button
-                            onClick={() => handleViewDetail(survey)}
-                            className="rounded-md bg-gray-500 px-3 py-1 text-sm text-white hover:bg-gray-600"
-                          >
-                            查看详情
-                          </button>
-                          <button
-                            onClick={() => handleReview(survey)}
-                            className="rounded-md bg-blue-500 px-3 py-1 text-sm text-white hover:bg-blue-600"
-                          >
-                            重新审核
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
+                ))}
               </tbody>
             </table>
           </div>
 
           {/* 分页器 */}
-          <div className="mt-6 flex items-center justify-center space-x-4">
+          <div className="mt-6 flex items-center justify-center gap-4 text-sm">
             <button
               onClick={() => setPage((prev) => Math.max(1, prev - 1))}
               disabled={page === 1}
-              className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm hover:bg-gray-100 disabled:opacity-50"
+              className="rounded bg-gray-200 px-3 py-1 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               上一页
             </button>
 
-            <span>
+            <span className="text-gray-600">
               第 <strong>{page}</strong> 页 / 共 <strong>{totalPages}</strong>{" "}
               页
             </span>
@@ -247,7 +223,7 @@ export default function ApprovedPage() {
             <button
               onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
               disabled={page === totalPages}
-              className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm hover:bg-gray-100 disabled:opacity-50"
+              className="rounded bg-gray-200 px-3 py-1 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               下一页
             </button>
@@ -255,7 +231,6 @@ export default function ApprovedPage() {
         </>
       )}
 
-      {/* 重新审核模态框 */}
       {/* 重新审核模态框 */}
       {showReviewModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">

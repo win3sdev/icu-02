@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Toaster } from "sonner";
 import {
   Noto_Sans_SC,
   Noto_Sans_TC,
@@ -70,6 +71,7 @@ export default function DashboardLayout({
           style={{ opacity: mounted ? 1 : 0 }}
         >
           {children}
+          <Toaster position="top-center" richColors closeButton />
         </main>
       </div>
     </div>

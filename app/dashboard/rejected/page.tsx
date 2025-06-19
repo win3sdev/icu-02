@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
 import { SchoolSurvey } from "@/app/types/survey";
 import DetailModal from "@/app/components/DetailModal";
 
@@ -15,6 +17,7 @@ export default function RejectedPage() {
 
   const [page, setPage] = useState(1);
   const pageSize = 10;
+  const [gotoPage, setGotoPage] = useState("");
   const [totalCount, setTotalCount] = useState(0);
 
   const fetchSurveys = async () => {
@@ -58,6 +61,7 @@ export default function RejectedPage() {
       if (!response.ok) {
         throw new Error("操作失败");
       }
+      toast.success("审核操作成功！");
 
       setSurveys((prev) => {
         const updated = prev.filter((survey) => survey.id !== surveyId);
@@ -67,6 +71,8 @@ export default function RejectedPage() {
         return updated;
       });
     } catch (error) {
+      toast.error("审核操作失败！");
+
       console.error("Error updating survey:", error);
       setError("操作失败，请稍后重试");
     }
@@ -93,11 +99,10 @@ export default function RejectedPage() {
     );
   }
 
+  const totalPages = Math.ceil(totalCount / pageSize);
   return (
     <div className="rounded-lg bg-white p-6 shadow">
-      <h1 className="mb-6 text-2xl font-bold text-gray-800">
-        审核拒绝列表
-      </h1>
+      <h1 className="mb-6 text-2xl font-bold text-gray-800">审核拒绝列表</h1>
 
       <div className="overflow-x-auto rounded-lg border border-gray-200">
         <table className="min-w-full divide-y divide-gray-200 text-sm text-gray-700">
@@ -254,6 +259,38 @@ export default function RejectedPage() {
         >
           下一页
         </button>
+
+        {/* 跳转页数 */}
+        <div className="flex items-center gap-1">
+          <input
+            type="number"
+            value={gotoPage}
+            onChange={(e) => setGotoPage(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                const pageNum = Number(gotoPage);
+                if (pageNum >= 1 && pageNum <= totalPages) {
+                  setPage(pageNum);
+                  setGotoPage("");
+                }
+              }
+            }}
+            placeholder="页"
+            className="w-16 rounded bg-gray-200 px-3 py-1 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
+          />
+          <button
+            onClick={() => {
+              const pageNum = Number(gotoPage);
+              if (pageNum >= 1 && pageNum <= totalPages) {
+                setPage(pageNum);
+                setGotoPage("");
+              }
+            }}
+            className="rounded bg-gray-200 px-3 py-1 text-sm text-gray-700 hover:bg-gray-300"
+          >
+            跳转
+          </button>
+        </div>
       </div>
 
       <DetailModal

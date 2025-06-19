@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { SchoolSurvey } from "@/app/types/survey";
+import { toast } from "sonner";
 import DetailModal from "@/app/components/DetailModal";
+import EditModal from "@/app/components/EditModal";
 
 const PAGE_SIZE = 10;
-
 export default function PendingPage() {
   const [surveys, setSurveys] = useState<SchoolSurvey[]>([]);
   const [loading, setLoading] = useState(true);
@@ -21,6 +22,14 @@ export default function PendingPage() {
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+  const [gotoPage, setGotoPage] = useState("");
+
+  const [showEdit, setShowEdit] = useState(false);
+
+  const handleEditClick = (survey: any) => {
+    setSelectedSurvey(survey);
+    setShowEdit(true);
+  };
 
   const fetchSurveys = async () => {
     try {
@@ -69,13 +78,14 @@ export default function PendingPage() {
         }),
       });
       if (!response.ok) throw new Error(`操作失败: ${response.status}`);
-
+      toast.success("审核操作成功！");
       setSurveys((prev) =>
         prev.filter((survey) => survey.id !== selectedSurvey.id)
       );
       setShowReviewModal(false);
       setReviewComment("");
     } catch (err) {
+      toast.error("审核操作失败！");
       const error = err as Error;
       setError(`操作失败，请稍后重试: ${error.message}`);
     }
@@ -95,13 +105,14 @@ export default function PendingPage() {
         }),
       });
       if (!response.ok) throw new Error(`操作失败: ${response.status}`);
-
+      toast.success("审核操作成功！");
       setSurveys((prev) =>
         prev.filter((survey) => survey.id !== selectedSurvey.id)
       );
       setShowReviewModal(false);
       setReviewComment("");
     } catch (err) {
+      toast.error("审核操作失败！");
       const error = err as Error;
       setError(`操作失败，请稍后重试: ${error.message}`);
     }
@@ -240,6 +251,13 @@ export default function PendingPage() {
                       >
                         审核
                       </button>
+
+                      <button
+                        onClick={() => handleEditClick(survey)}
+                        className="rounded-md bg-yellow-500 px-3 py-1 text-white text-sm hover:bg-yellow-600 transition-colors"
+                      >
+                        编辑
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -268,6 +286,38 @@ export default function PendingPage() {
         >
           下一页
         </button>
+
+        {/* 跳转页数 */}
+        <div className="flex items-center gap-1">
+          <input
+            type="number"
+            value={gotoPage}
+            onChange={(e) => setGotoPage(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                const pageNum = Number(gotoPage);
+                if (pageNum >= 1 && pageNum <= totalPages) {
+                  setPage(pageNum);
+                  setGotoPage("");
+                }
+              }
+            }}
+            placeholder="页"
+            className="w-16 rounded bg-gray-200 px-3 py-1 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
+          />
+          <button
+            onClick={() => {
+              const pageNum = Number(gotoPage);
+              if (pageNum >= 1 && pageNum <= totalPages) {
+                setPage(pageNum);
+                setGotoPage("");
+              }
+            }}
+            className="rounded bg-gray-200 px-3 py-1 text-sm text-gray-700 hover:bg-gray-300"
+          >
+            跳转
+          </button>
+        </div>
       </div>
 
       {/* 审核模态框 */}
@@ -320,6 +370,14 @@ export default function PendingPage() {
         type="pending"
         onReview={handleReview}
       />
+
+      {showEdit && selectedSurvey && (
+        <EditModal
+          survey={selectedSurvey}
+          onClose={() => setShowEdit(false)}
+          onSave={() => fetchSurveys()} // 刷新列表数据
+        />
+      )}
     </div>
   );
 }

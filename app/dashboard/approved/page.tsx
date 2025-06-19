@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { SchoolSurvey } from "@/app/types/survey";
 import DetailModal from "@/app/components/DetailModal";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 export default function ApprovedPage() {
   const [surveys, setSurveys] = useState<SchoolSurvey[]>([]);
@@ -17,6 +18,7 @@ export default function ApprovedPage() {
   const [reviewComment, setReviewComment] = useState("");
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
+  const [gotoPage, setGotoPage] = useState("");
   const pageSize = 10;
 
   useEffect(() => {
@@ -60,13 +62,14 @@ export default function ApprovedPage() {
       });
 
       if (!response.ok) throw new Error("操作失败");
-
+      toast.success("审核操作成功！");
       setSurveys((prev) =>
         prev.filter((survey) => survey.id !== selectedSurvey.id)
       );
       setShowReviewModal(false);
       setReviewComment("");
     } catch (error) {
+      toast.error("审核操作失败！");
       console.error("Error updating survey:", error);
       setError("操作失败，请稍后重试");
     }
@@ -227,6 +230,38 @@ export default function ApprovedPage() {
             >
               下一页
             </button>
+
+            {/* 跳转页数 */}
+            <div className="flex items-center gap-1">
+              <input
+                type="number"
+                value={gotoPage}
+                onChange={(e) => setGotoPage(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    const pageNum = Number(gotoPage);
+                    if (pageNum >= 1 && pageNum <= totalPages) {
+                      setPage(pageNum);
+                      setGotoPage("");
+                    }
+                  }
+                }}
+                placeholder="页"
+                className="w-16 rounded bg-gray-200 px-3 py-1 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
+              />
+              <button
+                onClick={() => {
+                  const pageNum = Number(gotoPage);
+                  if (pageNum >= 1 && pageNum <= totalPages) {
+                    setPage(pageNum);
+                    setGotoPage("");
+                  }
+                }}
+                className="rounded bg-gray-200 px-3 py-1 text-sm text-gray-700 hover:bg-gray-300"
+              >
+                跳转
+              </button>
+            </div>
           </div>
         </>
       )}
